@@ -31,4 +31,4 @@ The scripts used for data population is given above. These scripts parse the fil
 
 ## Tables and Queries
 All the tables used for data population is given in tables_and_queries.txt file. We have tried to include as many queries as possible to be used by our backend. Note that in many cases we are retrieving all the row information from table as they will be manipulated using the backend Python.
--
+
