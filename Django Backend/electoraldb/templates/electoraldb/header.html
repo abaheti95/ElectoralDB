@@ -1,0 +1,17 @@
+{% extends "electoraldb/add_voter.html" %}
+{% block head %}
+<meta charset="utf-8">
+<meta property="og:image" content="http://ianlunn.github.io/Hover/hover.jpg" />
+<meta property="og:site_name" content="Hover.css"/>
+<meta property="og:title" content="Hover.css - A collection of CSS3 powered hover effects" />
+<!-- <link href="css/demo-page.css" rel="stylesheet" media="all"> -->
+<link href="{% static 'css/hover.css' %}" rel="stylesheet" media="all">
+<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" media="all">
+<link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" media="all">
+<style type="text/css">
+.no_radius
+{
+	border-radius: 0px;
+}
+</style>
+{% endblock %}

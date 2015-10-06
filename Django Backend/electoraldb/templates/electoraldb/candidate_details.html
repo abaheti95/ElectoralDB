@@ -1,0 +1,112 @@
+{%extends "electoraldb/base.html" %}
+{% load staticfiles %}
+{%block title%}Candidate Search{%endblock%}
+{%block content%}
+<div class="container pull-left">
+	<a class="pull-right btn btn-primary" href="/electoraldb/query/">Back</a>
+	<h2>Candidate Details:</h2>
+	<table class="table table-striped">
+		<tbody>
+			<tr>
+				<td>Candidate ID:</td>
+				<td>{{candidate.candidateid}}</td>
+			</tr>
+			<tr>
+				<td>AC Number:</td>
+				<td>{{candidate.acno}}</td>
+			</tr>
+			<tr>
+				<td>Type:</td>
+				<td>{{candidate.type}}</td>
+			</tr>
+			<tr>
+				<td>Party ID:</td>
+				<td>{{candidate.partyid}}</td>
+			</tr>
+			{%ifnotequal party.partyid 'NO Party'%}
+			<tr>
+				<td>Party Name:</td>
+				<td>{{party.partyname}}</td>
+			</tr>
+			<tr>
+				<td>Party Symbol:</td>
+				<td><img src="/static/media/{{party.symbol}}"></td>
+			</tr>
+			<tr>
+				<td>Party Type:</td>
+				<td>{{party.type}}</td>
+			</tr>
+			<tr>
+				<td>Party Status:</td>
+				<td><span class="label {%ifequal party.is_approved True%}label-success{%else%}label-danger{%endifequal%}">{{party.is_approved}}</span></td>
+			</tr>
+			{%endifnotequal%}
+			<tr>
+				<td>Candidature Status:</td>
+				<td><span class="label {%ifequal candidate.is_approved True%}label-success{%else%}label-danger{%endifequal%}">{{candidate.is_approved}}</span></td>
+			</tr>
+			<tr>
+				<td>VoterID:</td>
+				<td>{{voter.voterid}}</td>
+			</tr>
+			<tr>
+				<td>Name:</td>
+				<td>{{voter.name}}</td>
+			</tr>
+			<tr>
+				<td>Gender:</td>
+				<td>{{voter.gender}}</td>
+			</tr>
+			<tr>
+				<td>Date of Birth:</td>
+				<td>{{voter.dob}}</td>
+			</tr>
+			<tr>
+				<td>Date of Issue:</td>
+				<td>{{voter.doi}}</td>
+			</tr>
+			<tr>
+				<td>Date of Application</td>
+				<td>{{voter.doa}}</td>
+			</tr>
+			<tr>
+				<td>Email-ID:</td>
+				<td>{{voter.emailid}}</td>
+			</tr>
+			<tr>
+				<td>Phone No.:</td>
+				<td>{{voter.phoneno}}</td>
+			</tr>
+			<tr>
+				<td>House No.:</td>
+				<td>{{voter.houseno}}</td>
+			</tr>
+			<tr>
+				<td>Street No.:</td>
+				<td>{{voter.streetno}}</td>
+			</tr>
+			<tr>
+				<td>Town:</td>
+				<td>{{voter.town}}</td>
+			</tr>
+			<tr>
+				<td>PIN Code:</td>
+				<td>{{voter.pin}}</td>
+			</tr>
+			<tr>
+				<td>Caste</td>
+				<td>{{voter.caste}}</td>
+			</tr>
+			<tr>
+				<td>Voter Status:</td>
+				<td><span class="label {%ifequal voter.approved "true"%}label-success{%else%}label-danger{%endifequal%}">{{voter.approved}}</span></td>
+			</tr>
+			{%ifequal voter.approved "true"%}
+			<tr>
+				<td>Part No.:</td>
+				<td>{{voter.partno}}</td>
+			</tr>
+			{%endifequal%}
+		</tbody>	</table>
+</div>
+{%endblock%}

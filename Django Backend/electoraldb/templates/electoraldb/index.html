@@ -1,0 +1,25 @@
+{%extends "electoraldb/base.html" %}
+{% load staticfiles %}
+{%block title%}Electoral Database{%endblock%}
+{%block content%}
+<div class="container pull-left">
+	<div class="row">
+		<h1 class="col-sm-offset-1 col-sm-3 text-center">Register</h1>
+	</div>
+	<div class="row">
+		<a class="btn btn-lg btn-primary col-sm-offset-1 col-sm-3" href="/electoraldb/add_voter/">Voter Registration</a>
+	</div>
+	<br/>
+	<div class="row">
+		<a class="btn btn-lg btn-primary col-sm-offset-1 col-sm-3" href="/electoraldb/add_candidate/">Candidate Registration</a>
+	</div>
+	<br/>
+	<div class="row">
+		<a class="btn btn-lg btn-primary col-sm-offset-1 col-sm-3" href="/electoraldb/add_party/">Party Registration</a>
+	</div>
+	<br/>
+	<div class="row">
+		<a class="btn btn-lg btn-primary col-sm-offset-1 col-sm-3" href="/electoraldb/query/">Statistics</a>
+	</div>
+</div>
+{%endblock%}

@@ -1,0 +1,147 @@
+{%extends "electoraldb/base.html" %}
+{% load staticfiles %}
+{%block title%}Party Search{%endblock%}
+{%block content%}
+<div class="container pull-left">
+	<a class="pull-right btn btn-primary" href="/electoraldb/query/">Back</a>
+	<h2>Party Details:</h2>
+	<table class="table table-striped">
+		<tbody>
+			<tr>
+				<td>PartyID:</td>
+				<td>{{party.partyid}}</td>
+			</tr>
+			<tr>
+				<td>Party Name:</td>
+				<td>{{party.partyname}}</td>
+			</tr>
+			<tr>
+				<td>Symbol:</td>
+				<td><img src="/static/media/{{party.symbol}}"></td>
+			</tr>
+			<tr>
+				<td>Type:</td>
+				<td>{{party.type}}</td>
+			</tr>
+			<tr>
+				<td>Status:</td>
+				<td><span class="label {%ifequal party.is_approved True%}label-success{%else%}label-danger{%endifequal%}">{{party.is_approved}}</span></td>
+			</tr>
+		</tbody>
+	</table>
+	<h2>Party Members</h2>
+	<table class="table table-striped">
+		<tbody>
+			<tr>
+				<th>Candidate ID:</th>
+				<th>Name:</th>
+				<th>AC Number:</th>
+				<th>AC Name:</th>
+				<th>Type:</th>
+				
+			</tr>
+			{%for candidate in candidates%}
+			<tr>
+				<td>{{candidate.0.candidateid}}</td>
+				<td>{{candidate.1.name}}</td>
+				<td>{{candidate.0.acno}}</td>
+				<td>{{candidate.2.acname}}</td>
+				<td>{{candidate.0.type}}</td>
+			</tr>
+			{%endfor%}
+		</tbody>
+	</table>
+	<button class="btn btn-primary" id="show_stats">Show {{party.partyname}} Election Statistics</button>
+	<div class="row">
+		<div id="chartarea"></div>
+	</div>
+	<!-- Elections data and studdapa to be printed here -->
+</div>
+{%endblock%}
+
+
+{%block scripts%}
+<script>
+{%for election in elections%}
+	var year{{forloop.counter0}} ={'year':{{election.0}},"femalevotes":{{election.1}}, "malevotes" : {{election.2}}, "obcvotes" :{{election.3}}, "stvotes" :{{election.4}}, "scvotes":{{election.5}}, "genvotes":{{election.6}} };
+{%endfor%}
+	var obj = {"party":"{{party.partyname}}", "data":[{%for election in elections%}year{{forloop.counter0}},{%endfor%}]};
+	console.log(obj)
+	var election = {"BJP":343, "AAP":63, "Congress":20, "CPI":10, "BSP":34, "AIADMK":67}
+</script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+google.load("visualization", "1", {packages:["corechart"]});
+
+$('button#show_stats').click(function(){
+	drawParty();
+	$('button#show_stats').remove()
+});
+function initParty(x) {
+	return obj;
+}
+
+function initElection(y) {
+	var statistics = {"parties":parties, "election":election};
+	return statistics;
+}
+
+function drawElection() {
+	var obj = initElection(4);
+	var parties = obj.parties;
+	var election = obj.election;
+	var data = [];
+	data[0] = ['Parties', 'Votes'];
+	for (var i = 0; i < parties.length; i++) {
+		list = [];
+		list[0] = parties[i];
+		list[1] = election[list[0]];
+		data[i+1] = list; 
+	};
+	console.log(data);
+	var data = google.visualization.arrayToDataTable(data);
+
+	var options = {
+		title: 'Vote Share',
+		is3D: true,
+		sliceVisibilityThreshold: 0.01,
+	};
+
+	var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+	chart.draw(data, options);
+}
+
+function drawParty() {
+	console.log(obj);
+	var name = obj.name;
+	var years = [];
+	var datayears = [];
+	datayears[0] = ['Year','GEN', 'OBC', 'SC', 'ST', { role: 'annotation' } ];
+	for (var i = 0; i < obj.data.length; i++) {
+		year = obj.data[i].year;
+		femalevotes = obj.data[i].femalevotes;
+		malevotes = obj.data[i].malevotes;
+		obcvotes = obj.data[i].obcvotes;
+		stvotes = obj.data[i].scvotes;
+		genvotes = obj.data[i].genvotes;
+		scvotes = obj.data[i].scvotes;
+		years[i] = [year.toString(), genvotes, obcvotes, scvotes, stvotes, ''];
+		datayears[i+1] = years[i];
+	};
+	console.log(datayears);
+	var data = google.visualization.arrayToDataTable(datayears);
+
+	var options = {
+		width: 900,
+		height: 400,
+		legend: { position: 'top', maxLines: 3 },
+		bar: { groupWidth: '75%' },
+		isStacked: true,
+		animation: {duration: 1000, easing: 'out', startup: true},
+	};
+
+	var chart = new google.visualization.ColumnChart(document.getElementById("chartarea"));
+	chart.draw(data, options);
+}
+</script>
+{%endblock%}

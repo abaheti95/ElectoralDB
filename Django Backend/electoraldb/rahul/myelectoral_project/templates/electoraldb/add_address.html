@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Electoral Db</title>
+    </head>
+
+    <body>
+        <h1>Add an address</h1>
+
+        <form id="address_form" method="post" action="/electoraldb/add_address/">
+
+            {% csrf_token %}
+            <ul>
+                {{form.as_ul}}
+            </ul>
+
+            <input type="submit" name="submit" value="Create Category" />
+        </form>
+    </body>
+
+</html>

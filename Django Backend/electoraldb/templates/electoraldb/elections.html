@@ -1,0 +1,109 @@
+{%extends "electoraldb/base.html" %}
+{% load staticfiles %}
+{%block title%}Election Search{%endblock%}
+{%block content%}
+<div class="container pull-left">
+	<a class="pull-right btn btn-primary" href="/electoraldb/query/">Back</a>
+	<button class="btn btn-primary" id="show_stats">Show Election Statistics of {{year}}</button>
+	<h2>Election Details:</h2>
+	<div class="row">
+		<div style="height:500px" id="piechart_3d"></div>
+	</div>
+
+</div>
+{%endblock%}
+{%block scripts%}
+<script>
+	var election = { {%for y in yelections%} "{{y.0}}": {{y.1}}, {%endfor%} }
+	console.log(election);
+	// var election = {"BJP":343, "AAP":63, "Congress":20, "CPI":10, "BSP":34, "AIADMK":67}
+</script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+google.load("visualization", "1", {packages:["corechart"]});
+
+$('button#show_stats').click(function(){
+	drawElection();
+	$('button#show_stats').remove()
+});
+function initParty(x) {
+	return obj;
+}
+
+function initElection(y) {
+	var statistics = {"parties":parties, "election":election};
+	return statistics;
+}
+
+function drawElection() {
+	var obj = election;
+	/*var parties = obj.parties;
+	var election = obj.election;
+	var data = [];
+	data[0] = ['Parties', 'Votes'];
+	for (var i = 0; i < parties.length; i++) {
+		list = [];
+		list[0] = parties[i];
+		list[1] = election[list[0]];
+		data[i+1] = list; 
+	};
+	console.log(data);*/
+	var data = [];
+	data[0] = ['Parties','Votes'];
+	var i = 0;
+	for (var key in obj) {
+		if (key != "_id") {
+			list = [];
+			list[0] = key.toString();
+			list[1] = obj[list[0]];
+			data[i + 1] = list;
+			i = i + 1;
+		}
+	}
+	console.log(data);
+    var data = google.visualization.arrayToDataTable(data);
+
+        var options = {
+          title: 'Vote Share',
+          is3D: true,
+          sliceVisibilityThreshold: 0.01,
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+        chart.draw(data, options);
+  }
+
+function drawParty() {
+	console.log(obj);
+	var name = obj.name;
+	var years = [];
+	var datayears = [];
+	datayears[0] = ['Year','GEN', 'OBC', 'SC', 'ST', { role: 'annotation' } ];
+	for (var i = 0; i < obj.data.length; i++) {
+		year = obj.data[i].year;
+		femalevotes = obj.data[i].femalevotes;
+		malevotes = obj.data[i].malevotes;
+		obcvotes = obj.data[i].obcvotes;
+		stvotes = obj.data[i].scvotes;
+		genvotes = obj.data[i].genvotes;
+		scvotes = obj.data[i].scvotes;
+		years[i] = [year.toString(), genvotes, obcvotes, scvotes, stvotes, ''];
+		datayears[i+1] = years[i];
+	};
+	console.log(datayears);
+	var data = google.visualization.arrayToDataTable(datayears);
+
+	var options = {
+		width: 900,
+		height: 400,
+		legend: { position: 'top', maxLines: 3 },
+		bar: { groupWidth: '75%' },
+		isStacked: true,
+		animation: {duration: 1000, easing: 'out', startup: true},
+	};
+
+	var chart = new google.visualization.ColumnChart(document.getElementById("chartarea"));
+	chart.draw(data, options);
+}
+</script>
+{%endblock%}

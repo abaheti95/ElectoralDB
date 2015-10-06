@@ -1,0 +1,111 @@
+{%extends "electoraldb/base.html" %}
+{% load staticfiles %}
+{%block title%}Welcome Voter{%endblock%}
+{%block head%}
+<style type="text/css">
+.tab-pane {
+	border-left: 1px solid #ddd;
+	border-right: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+	border-radius: 0px 0px 5px 5px;
+	padding: 10px;
+}
+
+.nav-tabs {
+	margin-bottom: 0;
+}
+</style>
+{%endblock%}
+
+{%block content%}
+
+{%if user.is_authenticated%}
+<div class="container pull-left">
+	<div role="tabpanel">
+		<!-- Nav tabs -->
+		<ul class="nav nav-justified nav-tabs" role="tablist">
+			<li role="presentation" class="active"><a href="#details" aria-controls="Party Details" role="tab" data-toggle="tab">Party Details</a></li>
+			<li role="presentation"><a href="#candidates" aria-controls="Party Candidates" role="tab" data-toggle="tab">Party Candidates</a></li>
+			<li role="presentation"><a href="#add_candi" aria-controls="Add Candidates" role="tab" data-toggle="tab">Add Candidates</a></li>
+		</ul>
+
+		<!-- Tab panes -->
+		<div class="tab-content">
+			<div role="tabpanel" class="tab-pane fade in active" id="details">
+				<h2>Party Details:</h2>
+				<table class="table table-striped">
+					<tbody>
+						<tr>
+							<td>PartyID:</td>
+							<td>{{party.partyid}}</td>
+						</tr>
+						<tr>
+							<td>Party Name:</td>
+							<td>{{party.partyname}}</td>
+						</tr>
+						<tr>
+							<td>Symbol:</td>
+							<td><img src="/static/media/{{party.symbol}}"></td>
+						</tr>
+						<tr>
+							<td>Type:</td>
+							<td>{{party.type}}</td>
+						</tr>
+						<tr>
+							<td>Status:</td>
+							<td><span class="label {%ifequal party.is_approved True%}label-success{%else%}label-danger{%endifequal%}">{{party.is_approved}}</span></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div role="tabpanel" class="tab-pane fade" id="candidates">
+				<h2>Party Members</h2>
+				<table class="table table-striped">
+					<tbody>
+						<tr>
+							<th>Candidate ID:</th>
+							<th>Name:</th>
+							<th>AC Number:</th>
+							<th>AC Name:</th>
+							<th>Type:</th>
+							
+						</tr>
+						{%for candidate in candidates%}
+						<tr>
+							<td>{{candidate.0.candidateid}}</td>
+							<td>{{candidate.1.name}}</td>
+							<td>{{candidate.0.acno}}</td>
+							<td>{{candidate.2.acname}}</td>
+							<td>{{candidate.0.type}}</td>
+						</tr>
+						{%endfor%}
+					</tbody>
+				</table>
+			</div>
+			<div role="tabpanel" class="tab-pane fade" id="add_candi">
+				<h2>List of available candidates:</h2>
+				<form id="add_candi_form" class="form-horizontal" method="post" action="/electoraldb/add_candi_party/">
+					{% csrf_token %}
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Candidate ID:</label>
+						<div class="col-sm-4">
+							<select class="form-control" id="id_cid" name="cid">
+								{%for cid in candis%}
+								<option value="{{cid}}">{{cid}}</option>
+								{%endfor%}
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-offset-2 col-sm-2">
+							<input id="submit-btn" class="form-control btn btn-primary" type="submit" name="submit" value="Add Candidate to Party" />
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+{%endif%}
+
+{%endblock%}

@@ -1,0 +1,65 @@
+{%extends "electoraldb/base.html" %}
+{% load staticfiles %}
+{%block title%}Constituency Search{%endblock%}
+{%block content%}
+<div class="container pull-left">
+	<a class="pull-right btn btn-primary" href="/electoraldb/query/">Back</a>
+	<h2>Constituency Details:</h2>
+	<table class="table table-striped">
+		<tbody>
+			<tr>
+				<td>AC Number:</td>
+				<td>{{constituency.acno}}</td>
+			</tr>
+			<tr>
+				<td>AC Name:</td>
+				<td>{{constituency.acname}}</td>
+			</tr>
+			<!-- <tr>
+				<td>Population:</td>
+				<td>{{constituency.population}}</td>
+			</tr> -->
+			<tr>
+				<td>Pirliamentary Constituency Number:</td>
+				<td>{{pconstituency.pcno}}</td>
+			</tr>
+			<tr>
+				<td>Pirliamentary Constituency Name:</td>
+				<td>{{pconstituency.pcname}}</td>
+			</tr>
+			<tr>
+				<td>State:</td>
+				<td>{{pconstituency.state}}</td>
+			</tr>
+			<tr>
+				<td>Population:</td>
+				<td>{{data.population}}</td>
+			</tr>
+			<tr>
+				<td>Number of Male Voters:</td>
+				<td>{{data.male}}</td>
+			</tr>
+			<tr>
+				<td>Number of Female Voters:</td>
+				<td>{{data.female}}</td>
+			</tr>
+			<tr>
+				<td>Number of General Voters:</td>
+				<td>{{data.gen}}</td>
+			</tr>
+			<tr>
+				<td>Number of OBC Voters:</td>
+				<td>{{data.obc}}</td>
+			</tr>
+			<tr>
+				<td>Number of ST Voters:</td>
+				<td>{{data.st}}</td>
+			</tr>
+			<tr>
+				<td>Number of SC Voters:</td>
+				<td>{{data.sc}}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+{%endblock%}

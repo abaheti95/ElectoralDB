@@ -1,0 +1,27 @@
+drop table Identity;
+drop table Parliamentary_Constituency;
+drop table Party;
+
+drop table Polling;
+drop table Voter;
+drop table Address;
+drop table Districy_Constituency;
+drop table Constituency;
+drop table Election;
+
+drop table Candidate;
+drop table Party_Constituency;
+drop table District_Constituency;
+drop table Election_Statistics;
+drop table Party_Candidate;
+
+drop table Relation;
+drop table auth_user;
+drop table auth_group;
+drop table auth_group_permissions;
+drop table auth_permission;
+drop table auth_user_groups;           
+drop table auth_user_user_permissions ;
+drop table django_admin_log        ;
+drop table django_content_type     ;
+drop table django_migrations  ;

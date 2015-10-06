@@ -1,0 +1,7 @@
+def createuser():
+	x = Voter.objects.filter(password='password')
+	for y in x:
+		user = User()
+		user.username = y.voterid
+		user.set_password('password')
+		user.save()

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script>
+    var year0 = {"year":2000, "femalevotes":345, "malevotes" : 755, "obcvotes" : 118, "stvotes" : 126, "scvotes":136, "genvotes":314};
+    var year1 = {"year":2001, "femalevotes":409, "malevotes" : 770, "obcvotes" : 189, "stvotes" : 149, "scvotes":195, "genvotes":472};
+    var year2 = {"year":2002, "femalevotes":422, "malevotes" : 504, "obcvotes" : 156, "stvotes" : 80, "scvotes":109, "genvotes":375};
+    var year3 = {"year":2003, "femalevotes":308, "malevotes" : 628, "obcvotes" : 280, "stvotes" : 147, "scvotes":178, "genvotes":379};
+    var year4 = {"year":2004, "femalevotes":477, "malevotes" : 587, "obcvotes" : 160, "stvotes" : 64, "scvotes":176, "genvotes":309};
+    var year5 = {"year":2005, "femalevotes":441, "malevotes" : 439, "obcvotes" : 203, "stvotes" : 147, "scvotes":157, "genvotes":455};
+    var year6 = {"year":2006, "femalevotes":525, "malevotes" : 366, "obcvotes" : 128, "stvotes" : 54, "scvotes":106, "genvotes":390};
+    var year7 = {"year":2007, "femalevotes":552, "malevotes" : 645, "obcvotes" : 189, "stvotes" : 105, "scvotes":192, "genvotes":357};
+    var year8 = {"year":2008, "femalevotes":573, "malevotes" : 797, "obcvotes" : 279, "stvotes" : 55, "scvotes":153, "genvotes":374};
+    var year9 = {"year":2009, "femalevotes":531, "malevotes" : 568, "obcvotes" : 206, "stvotes" : 56, "scvotes":200, "genvotes":450};
+    var obj = {"party":"BJP", "data":[year0,year1,year2,year3,year4,year5,year6,year7,year8,year9]};
+    var parties = ["BJP", "AAP", "Congress", "CPI", "BSP", "AIADMK"]
+    var election = {"BJP":343, "AAP":63, "Congress":20, "CPI":10, "BSP":34, "AIADMK":67}
+  </script>>
+  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+  <script type="text/javascript">
+  google.load("visualization", "1", {packages:["corechart"]});
+
+  function initParty(x) {
+    return obj;
+  }
+
+  function initElection(y) {
+    var statistics = {"parties":parties, "election":election};
+    return election;
+  }
+
+  function drawElection() {
+    var obj = initElection(4);
+    /*var parties = obj.parties;
+    var election = obj.election;
+    var data = [];
+    data[0] = ['Parties', 'Votes'];
+    for (var i = 0; i < parties.length; i++) {
+        list = [];
+        list[0] = parties[i];
+        list[1] = election[list[0]];
+        data[i+1] = list; 
+    };
+    console.log(data);*/
+    var data = [];
+    data[0] = ['Parties','Votes'];
+    var i = 0;
+    for (var key in obj) {
+      if (key != "_id") {
+        list = [];
+        list[0] = key;
+        list[1] = obj[key];
+        data[i + 1] = list;
+        i = i + 1;
+      }
+    }
+    console.log(data);
+    var data = google.visualization.arrayToDataTable(data);
+
+        var options = {
+          title: 'Vote Share',
+          is3D: true,
+          sliceVisibilityThreshold: 0.01,
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+        chart.draw(data, options);
+  }
+
+  function drawParty() {
+    var obj = initParty(3);
+    var name = obj.name;
+    var years = [];
+    var datayears = [];
+    datayears[0] = ['Year','GEN', 'OBC', 'SC', 'ST', { role: 'annotation' } ];
+    for (var i = 0; i < obj.data.length; i++) {
+        year = obj.data[i].year;
+        femalevotes = obj.data[i].femalevotes;
+        malevotes = obj.data[i].malevotes;
+        obcvotes = obj.data[i].obcvotes;
+        stvotes = obj.data[i].scvotes;
+        genvotes = obj.data[i].genvotes;
+        scvotes = obj.data[i].scvotes;
+        years[i] = [year.toString(), genvotes, obcvotes, scvotes, stvotes, ''];
+        datayears[i+1] = years[i];
+    };
+    var data = google.visualization.arrayToDataTable(datayears);
+
+    var options = {
+      width: 900,
+      height: 400,
+      legend: { position: 'top', maxLines: 3 },
+      bar: { groupWidth: '75%' },
+      isStacked: true,
+      animation: {duration: 1000, easing: 'out', startup: true},
+    };
+
+    var chart = new google.visualization.ColumnChart(document.getElementById("chartarea"));
+    chart.draw(data, options);
+  }
+  </script>
+</head>
+<body>
+  <div id="chartarea" style="width: 50%; height: 400px;"></div>
+  <div id = "formid1">
+    <form>
+      <input type ="button" value="clickme" onclick="drawParty()">
+    </form> 
+  </div>
+  <div id="piechart_3d" style="width: 50%; height: 400px;"></div>
+  <div id = "formid2">
+    <form>
+      <input type ="button" value="clickme" onclick="drawElection()">
+    </form> 
+  </div>
+</body>
+</html>

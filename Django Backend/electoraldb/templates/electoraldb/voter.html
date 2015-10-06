@@ -1,0 +1,79 @@
+{%extends "electoraldb/base.html" %}
+{% load staticfiles %}
+{%block title%}Welcome Voter{%endblock%}
+
+{%block content%}
+
+{%if user.is_authenticated%}
+<div class="container pull-left">
+	<h2>Voter Details:</h2>
+	<table class="table table-striped">
+		<tbody>
+			<tr>
+				<td>VoterID:</td>
+				<td>{{voterid}}</td>
+			</tr>
+			<tr>
+				<td>Name:</td>
+				<td>{{name}}</td>
+			</tr>
+			<tr>
+				<td>Gender:</td>
+				<td>{{gender}}</td>
+			</tr>
+			<tr>
+				<td>Date of Birth:</td>
+				<td>{{dob}}</td>
+			</tr>
+			<tr>
+				<td>Date of Issue:</td>
+				<td>{{doi}}</td>
+			</tr>
+			<tr>
+				<td>Date of Application</td>
+				<td>{{doa}}</td>
+			</tr>
+			<tr>
+				<td>Email-ID:</td>
+				<td>{{emailid}}</td>
+			</tr>
+			<tr>
+				<td>Phone No.:</td>
+				<td>{{phoneno}}</td>
+			</tr>
+			<tr>
+				<td>House No.:</td>
+				<td>{{houseno}}</td>
+			</tr>
+			<tr>
+				<td>Street No.:</td>
+				<td>{{streetno}}</td>
+			</tr>
+			<tr>
+				<td>Town:</td>
+				<td>{{town}}</td>
+			</tr>
+			<tr>
+				<td>PIN Code:</td>
+				<td>{{pin}}</td>
+			</tr>
+			<tr>
+				<td>Caste</td>
+				<td>{{caste}}</td>
+			</tr>
+			<tr>
+				<td>Status:</td>
+				<td><span class="label {%ifequal approved "true"%}label-success{%else%}label-danger{%endifequal%}">{{approved}}</span></td>
+			</tr>
+			{%ifequal approved "true"%}
+			<tr>
+				<td>Part No.:</td>
+				<td>{{partno}}</td>
+			</tr>
+			{%endifequal%}
+		</tbody>
+	</table>
+</div>
+{%endif%}
+
+{%endblock%}

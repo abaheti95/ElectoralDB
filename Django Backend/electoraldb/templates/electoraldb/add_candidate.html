@@ -1,0 +1,131 @@
+{%extends "electoraldb/base.html" %}
+{% load staticfiles %}
+{%block title%}Candidate Registration{%endblock%}
+{%block head%}
+<link href='/static/css/strength.css' rel='stylesheet' type='text/css'>
+{%endblock%}
+{%block content%}
+<div class="container pull-left">
+	<div class="row"> 
+		<div class="col-sm-6 text-center">
+			<h1>Candidate Registration Form</h1>
+		</div>
+	</div>
+
+	<form id="candidate_form" class="form-horizontal" method="post" action="/electoraldb/validate_candidate/">
+		{% csrf_token %}
+		<div class="form-group">
+			<label class="col-sm-2 control-label">Voterid:</label>
+			<div class="col-sm-4">
+				<input class="form-control" id="id_voterid" maxlength="10" name="voterid" type="text" placeholder="Enter your Voter ID" required/>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">AC Number:</label>
+			<div class="col-sm-4">
+				<select class="form-control" id="id_acno" name="acno">
+					<!-- Print the list here -->
+					{%for ac in acno%}<option value="{{ac}}">{{ac}}</option>{%endfor%}
+				</select>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">Type:</label>
+			<div class="col-sm-4">
+				<select class="form-control" id="id_type" name="type">
+					<option value="MP">MP</option>
+					<option value="MLA">MLA</option>
+				</select>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">Party ID:</label>
+			<div class="col-sm-4">
+				<select class="form-control" id="id_partyid" name="partyid"><option value="NO Party">NO Party</option>{%for id in pid%}<option value="{{id}}">{{id}}</option>{%endfor%}
+				</select>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label">Password:</label>
+			<div class="col-sm-4">
+				<div class="input-group">
+					<input class="form-control" id="id_password" name="password" type="password" placeholder="Enter the Password" required/>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">Confirm Password:</label>
+			<div class="col-sm-4">
+				<div>
+					<input class="form-control" id="id_re_password" name="re_password" type="password" placeholder="Confirm Password" required/>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-2">
+				<input id="submit-btn" class="form-control btn btn-primary" type="submit" name="submit" value="Add Candidate" />
+			</div>
+		</div>
+	</form>
+</div>
+{%endblock%}
+{%block scripts%}
+<script type="text/javascript" src="/static/js/strength.js"></script>
+<script type="text/javascript">
+$(document).ready(function ($) {
+     $('input#id_password').strength({
+ 		strengthClass: 'strength',
+        strengthMeterClass: 'strength_meter input-group-addon',
+        strengthButtonClass: 'button_strength',
+        strengthButtonText: 'Show password',
+        strengthButtonTextToggle: 'Hide Password'});
+});
+// submit button clicked
+$('#candidate_form').submit(function(){
+	if($('input#id_re_password').val() == $('input#id_password').val() && $('input#id_password').val()!="")
+	{
+		$("input#id_re_password").parent().html("");
+		return true;
+	}
+	else
+	{
+		alert("Password Mismatch");
+		return false;
+	}
+});
+// Confirm Password
+$('input#id_password').on('input propertychange paste', function() {
+	// check if re password is same as password
+	// alert('changed!');
+	if($('input#id_re_password').val() != $('input#id_password').val() || $('input#id_password').val()=="")
+	{
+		// unsuccessful
+		$('input#id_re_password').parent().removeClass();
+		$('input#id_re_password').parent().addClass('has-error');
+	}
+	else
+	{
+		//successful
+		$('input#id_re_password').parent().removeClass();
+		$('input#id_re_password').parent().addClass('has-success');
+	}
+});
+$('input#id_re_password').on('input propertychange paste', function() {
+	// check if re password is same as password
+	// alert('changed!');
+	if($('input#id_re_password').val() != $('input#id_password').val() || $('input#id_password').val()=="")
+	{
+		// unsuccessful
+		$('input#id_re_password').parent().removeClass();
+		$('input#id_re_password').parent().addClass('has-error');
+	}
+	else
+	{
+		//successful
+		$('input#id_re_password').parent().removeClass();
+		$('input#id_re_password').parent().addClass('has-success');
+	}
+});
+</script>
+{%endblock%}

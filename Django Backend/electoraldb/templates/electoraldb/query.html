@@ -1,0 +1,200 @@
+{%extends "electoraldb/base.html" %}
+{% load staticfiles %}
+{%block title%}Statistics Page{%endblock%}
+{%block head%}
+<style type="text/css">
+.tab-pane {
+	border-left: 1px solid #ddd;
+	border-right: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+	border-radius: 0px 0px 5px 5px;
+	padding: 10px;
+}
+
+.nav-tabs {
+	margin-bottom: 0;
+}
+</style>
+{%endblock%}
+{%block content%}
+<div class="container pull-left">
+	<div role="tabpanel">
+		<!-- Nav tabs -->
+		<ul class="nav nav-justified nav-tabs" role="tablist">
+			<li role="presentation" class="active"><a href="#constituency" aria-controls="Get Constituency Detials" role="tab" data-toggle="tab">Get Constituency Detials</a></li>
+			<li role="presentation"><a href="#election" aria-controls="Election Statistics" role="tab" data-toggle="tab">Election Statistics</a></li>
+			<li role="presentation"><a href="#candidate" aria-controls="Candidate Details" role="tab" data-toggle="tab">Candidate Details</a></li>
+			<li role="presentation"><a href="#party" aria-controls="Party Statistics" role="tab" data-toggle="tab">Party Statistics</a></li>
+		</ul>
+
+		<!-- Tab panes -->
+		<div class="tab-content">
+			<div role="tabpanel" class="tab-pane fade in active" id="constituency">
+				<h2>Get Constituency Details:</h2>
+				<form id="constituency_form" class="form-horizontal" method="post" action="/electoraldb/constituency/">
+					{% csrf_token %}
+					<div class="form-group">
+						<label class="col-sm-2 control-label">AC No.:</label>
+						<div class="col-sm-4">
+							<select class="form-control" id="id_acno" name="acno">
+								{%for ac in acno%}
+								<option value="{{ac}}">{{ac}}</option>
+								{%endfor%}
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-offset-2 col-sm-3">
+							<input id="submit-btn" class="form-control btn btn-primary" type="submit" name="submit" value="Get Constituency Statistics" />
+						</div>
+					</div>
+				</form>
+			</div>
+			<div role="tabpanel" class="tab-pane fade" id="election">
+				<h2>Election Statistics</h2>
+				<form id="election_form" class="form-horizontal" method="post" action="/electoraldb/elections/">
+					{% csrf_token %}
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Year:</label>
+						<div class="col-sm-4">
+							<select class="form-control" id="id_year" name="year">
+								{%for year in years%}
+								<option value="{{year}}">{{year}}</option>
+								{%endfor%}
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-offset-2 col-sm-3">
+							<input id="submit-btn" class="form-control btn btn-primary" type="submit" name="submit" value="Get Election Infromation" />
+						</div>
+					</div>
+				</form>
+			</div>
+			<div role="tabpanel" class="tab-pane fade" id="candidate">
+				<h2>Candidate Details:</h2>
+				<form id="candidate_details_form" class="form-horizontal" method="post" action="/electoraldb/candidate_details/">
+					{% csrf_token %}
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Candidate ID:</label>
+						<div class="col-sm-4">
+							<select class="form-control" id="id_cid" name="cid">
+								{%for cid in cids%}
+								<option value="{{cid}}">{{cid}}</option>
+								{%endfor%}
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-offset-2 col-sm-3">
+							<input id="submit-btn" class="form-control btn btn-primary" type="submit" name="submit" value="Get Candidate Infromation" />
+						</div>
+					</div>
+				</form>
+			</div>
+			<div role="tabpanel" class="tab-pane fade" id="party">
+				<h2>Party Statistics:</h2>
+				<form id="party_stats_from" class="form-horizontal" method="post" action="/electoraldb/party_stats/">
+					{% csrf_token %}
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Pary ID:</label>
+						<div class="col-sm-4">
+							<select class="form-control" id="id_pid" name="pid">
+								{%for pid in pids%}
+								<option value="{{pid}}">{{pid}}</option>
+								{%endfor%}
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-offset-2 col-sm-3">
+							<input id="submit-btn" class="form-control btn btn-primary" type="submit" name="submit" value="Get Party Statistics" />
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+{%endblock%}
+{%block scripts%}
+<script>
+{%for election in elections%}
+	var year{{forloop.counter0}} ={'year':{{election.0}},"femalevotes":{{election.1}}, "malevotes" : {{election.2}}, "obcvotes" :{{election.3}}, "stvotes" :{{election.4}}, "scvotes":{{election.5}}, "genvotes":{{election.6}} };
+{%endfor%}
+	var obj = {"party":"BJP", "data":[{%for election in elections%}year{{forloop.counter0}},{%endfor%}]};
+	console.log(obj)
+	var election = {"BJP":343, "AAP":63, "Congress":20, "CPI":10, "BSP":34, "AIADMK":67}
+</script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+google.load("visualization", "1", {packages:["corechart"]});
+
+function initParty(x) {
+	return obj;
+}
+
+function initElection(y) {
+	var statistics = {"parties":parties, "election":election};
+	return statistics;
+}
+
+function drawElection() {
+	var obj = initElection(4);
+	var parties = obj.parties;
+	var election = obj.election;
+	var data = [];
+	data[0] = ['Parties', 'Votes'];
+	for (var i = 0; i < parties.length; i++) {
+		list = [];
+		list[0] = parties[i];
+		list[1] = election[list[0]];
+		data[i+1] = list; 
+	};
+	console.log(data);
+	var data = google.visualization.arrayToDataTable(data);
+
+	var options = {
+		title: 'Vote Share',
+		is3D: true,
+		sliceVisibilityThreshold: 0.01,
+	};
+
+	var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+	chart.draw(data, options);
+}
+
+function drawParty() {
+	console.log(obj);
+	var name = obj.name;
+	var years = [];
+	var datayears = [];
+	datayears[0] = ['Year','GEN', 'OBC', 'SC', 'ST', { role: 'annotation' } ];
+	for (var i = 0; i < obj.data.length; i++) {
+		year = obj.data[i].year;
+		femalevotes = obj.data[i].femalevotes;
+		malevotes = obj.data[i].malevotes;
+		obcvotes = obj.data[i].obcvotes;
+		stvotes = obj.data[i].scvotes;
+		genvotes = obj.data[i].genvotes;
+		scvotes = obj.data[i].scvotes;
+		years[i] = [year.toString(), genvotes, obcvotes, scvotes, stvotes, ''];
+		datayears[i+1] = years[i];
+	};
+	console.log(datayears);
+	var data = google.visualization.arrayToDataTable(datayears);
+
+	var options = {
+		width: 900,
+		height: 400,
+		legend: { position: 'top', maxLines: 3 },
+		bar: { groupWidth: '75%' },
+		isStacked: true,
+		animation: {duration: 1000, easing: 'out', startup: true},
+	};
+
+	var chart = new google.visualization.ColumnChart(document.getElementById("chartarea"));
+	chart.draw(data, options);
+}
+</script>
+{%endblock%}

@@ -1,0 +1,425 @@
+{%extends "electoraldb/base.html" %}
+{% load staticfiles %}
+{%block title%}Welcome Election Commission Admin{%endblock%}
+{%block head%}
+<style type="text/css">
+.tab-pane {
+	border-left: 1px solid #ddd;
+	border-right: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+	border-radius: 0px 0px 5px 5px;
+	padding: 10px;
+}
+
+.nav-tabs {
+	margin-bottom: 0;
+}
+</style>
+{%endblock%}
+
+{%block content%}
+{%if user.is_authenticated%}
+<div class="container pull-left">
+	<div role="tabpanel">
+		<!-- Nav tabs -->
+		<ul class="nav nav-justified nav-tabs" role="tablist">
+			<li role="presentation" class="active"><a href="#approve" aria-controls="Approve Requests" role="tab" data-toggle="tab">Approve Requests</a></li>
+			<li role="presentation"><a href="#voter_search" aria-controls="Voter Search" role="tab" data-toggle="tab">VoterID Search</a></li>
+			<li role="presentation"><a href="#pin_search" aria-controls="Pincode Voter Search" role="tab" data-toggle="tab">Pincode Voter Search</a></li>
+		</ul>
+
+		<!-- Tab panes -->
+		<div class="tab-content">
+			<div role="tabpanel" class="tab-pane fade in active" id="approve">
+				<div role="tabpanel">
+					<!-- Nav tabs -->
+					<ul class="nav nav-justified nav-tabs" role="tablist">
+						<li role="presentation" class="active"><a href="#approve_voter" aria-controls="Approve Voters" role="tab" data-toggle="tab">Approve Voters</a></li>
+						<li role="presentation"><a href="#approve_candidate" aria-controls="Approve Candidates" role="tab" data-toggle="tab">Approve Candidates</a></li>
+						<li role="presentation"><a href="#approve_party" aria-controls="Approve Parties" role="tab" data-toggle="tab">Approve Parties</a></li>
+					</ul>
+
+					<!-- Tab panes -->
+					<div class="tab-content">
+						<div role="tabpanel" class="tab-pane fade in active" id="approve_voter">
+							<h2>Pending Voters to be approved:</h2>
+							<form id="approve_voter_form" class="form-horizontal" method="post" action="/electoraldb/approve_voter/">
+								{% csrf_token %}
+								<table class="table table-striped">
+									<tbody>
+										<tr>
+											<th>
+												<div class="checkbox">
+													<label>
+														<input id="voter_select_all" type="checkbox" name="select_all" value=""><strong>Voter ID:</strong>
+													</label>
+												</div>
+											</th>
+											<!-- <th>Voter ID:</th> -->
+											<th>Name:</th>
+											<th>DOB:</th>
+											<th>Pincode:</th>
+											<th>Town:</th>
+										</tr>
+										{%for voter in voters%}
+										<tr>
+											<td>
+												<!-- Checkbox -->
+												<div class="checkbox">
+													<label>
+														<input class="voter_checkbox" type="checkbox" name="check[]" value="{{voter.voterid}}">{{voter.voterid}}
+													</label>
+												</div>
+											</td>
+											<!-- <td>{{voter.voterid}}</td> -->
+											<td>{{voter.name}}</td>
+											<td>{{voter.dob}}</td>
+											<td>{{voter.pin}}</td>
+											<td>{{voter.town}}</td>
+										</tr>
+										{%endfor%}
+										<tr>
+											
+										</tr>
+									</tbody>
+								</table>
+								<div class="form-group">
+									<div class="col-sm-3">
+										<input id="submit-btn" class="form-control btn btn-primary" type="submit" name="submit" value="Approve Selected Voters" />
+									</div>
+								</div>
+							</form>
+						</div>
+						<div role="tabpanel" class="tab-pane fade" id="approve_candidate">
+							<h2>Pending Candidates to be approved:</h2>
+							<form id="approve_candidate_form" class="form-horizontal" method="post" action="/electoraldb/approve_candidate/">
+								{% csrf_token %}
+								<table class="table table-striped">
+									<tbody>
+										<tr>
+											<th>
+												<div class="checkbox">
+													<label>
+														<input id="candidate_select_all" type="checkbox" name="select_all" value=""><strong>Candidate ID:</strong>
+													</label>
+												</div>
+											</th>
+											<th>Name:</th>
+											<th>AC Number:</th>
+											<th>AC Name:</th>
+											<th>Type:</th>
+										</tr>
+										{%for candidate in candidates%}
+										<tr>
+											<td>
+												<div class="checkbox">
+													<label>
+														<input class="candidate_checkbox" type="checkbox" name="check[]" value="{{candidate.0.candidateid}}">{{candidate.0.candidateid}}
+													</label>
+												</div>
+											</td>
+											<td>{{candidate.1.name}}</td>
+											<td>{{candidate.0.acno}}</td>
+											<td>{{candidate.2.acname}}</td>
+											<td>{{candidate.0.type}}</td>
+										</tr>
+										{%endfor%}
+									</tbody>
+								</table>
+								<div class="form-group">
+									<div class="col-sm-3">
+										<input id="submit-btn" class="form-control btn btn-primary" type="submit" name="submit" value="Approve Selected Candidates" />
+									</div>
+								</div>
+							</form>
+						</div>
+						<div role="tabpanel" class="tab-pane fade" id="approve_party">
+							<h2>Pending Parties to be approved:</h2>
+							<form id="approve_party_form" class="form-horizontal" method="post" action="/electoraldb/approve_party/">
+								{% csrf_token %}
+								<table class="table table-striped">
+									<tbody>
+										<tr>
+											<th>
+												<div class="checkbox">
+													<label>
+														<input id="party_select_all" type="checkbox" name="select_all" value=""><strong>PartyID:</strong>
+													</label>
+												</div>
+											</th>
+											<th>Party Name:</th>
+											<th>Type:</th>
+										</tr>
+										{%for party in parties%}
+										<tr>
+											<td>
+												<div class="checkbox">
+													<label>
+														<input class="party_checkbox" type="checkbox" name="check[]" value="{{party.partyid}}">{{party.partyid}}
+													</label>
+												</div>
+											</td>
+											<td>{{party.partyname}}</td>
+											<td>{{party.type}}</td>
+										</tr>
+										{%endfor%}
+									</tbody>
+								</table>
+								<div class="form-group">
+									<div class="col-sm-3">
+										<input id="submit-btn" class="form-control btn btn-primary" type="submit" name="submit" value="Approve Selected Parties" />
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>			
+			</div>
+			<div role="tabpanel" class="tab-pane fade" id="voter_search">
+				<div class="form-horizontal">
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Voter ID:</label>
+						<div class="col-sm-4">
+							<input class="form-control" id="id_voterid" maxlength="10" name="voterid" type="text" placeholder="Enter the voterID to be searched"/>
+						</div>
+					</div>
+				</div>
+				<div id="voter_display">
+
+				</div>
+			</div>
+			<div role="tabpanel" class="tab-pane fade" id="pin_search">
+				<div class="form-horizontal">	
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Pin Code:</label>
+						<div class="col-sm-4">
+							<input class="form-control" id="id_pin" min="100000" max="999999" name="pin" type="number" placeholder="Enter the PIN Code" required/>
+						</div>
+					</div>
+						
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Town:</label>
+						<div class="col-sm-4">
+							<select class="form-control"  id="id_town" name="town">
+								<option value="----">----</option>
+							</select>
+						<!-- <input class="form-control" id="id_town" maxlength="30" name="town" type="text" /> -->
+						</div>
+					</div>
+				</div>
+				<div id="voters_display">
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{%endif%}
+{%endblock%}
+{%block scripts%}
+<script type="text/javascript" src="/static/js/pin_code.js"></script>
+<script type="text/javascript" src="/static/js/ec.js"></script>
+<script type="text/javascript">
+function initialize_voter () {
+	$('div#voter_display').html('');
+}
+function initialize_voters () {
+	$('div#voters_display').html('');
+}
+function voter_string(obj1,obj2)
+{
+	var str = '<table class="table table-striped">	\
+		<tbody>	\
+			<tr>	\
+				<td>VoterID:</td>	\
+				<td>'+obj2+'</td>	\
+			</tr>	\
+			<tr>	\
+				<td>Name:</td>	\
+				<td>'+obj1.name+'</td>	\
+			</tr>	\
+			<tr>	\
+				<td>Gender:</td>	\
+				<td>'+obj1.gender+'</td>	\
+			</tr>	\
+			<tr>	\
+				<td>Date of Birth:</td>	\
+				<td>'+obj1.dob+'</td>	\
+			</tr>	\
+			<tr>	\
+				<td>Date of Issue:</td>	\
+				<td>'+obj1.doi+'</td>	\
+			</tr>	\
+			<tr>	\
+				<td>Date of Application</td>	\
+				<td>'+obj1.doa+'</td>	\
+			</tr>	\
+			<tr>	\
+				<td>Email-ID:</td>	\
+				<td>'+obj1.emailid+'</td>	\
+			</tr>	\
+			<tr>	\
+				<td>Phone No.:</td>	\
+				<td>'+obj1.phoneno+'</td>	\
+			</tr>	\
+			<tr>	\
+				<td>House No.:</td>	\
+				<td>'+obj1.houseno+'</td>	\
+			</tr>	\
+			<tr>	\
+				<td>Street No.:</td>	\
+				<td>'+obj1.streetno+'</td>	\
+			</tr>	\
+			<tr>	\
+				<td>Town:</td>	\
+				<td>'+obj1.town+'</td>	\
+			</tr>	\
+			<tr>	\
+				<td>PIN Code:</td>	\
+				<td>'+obj1.pin+'</td>	\
+			</tr>	\
+			<tr>	\
+				<td>Caste</td>	\
+				<td>'+obj1.caste+'</td>	\
+			</tr>	\
+			<tr>	\
+				<td>Status:</td>	\
+				<td><span class="label '+((obj1.approved=="true")?'label-success':'label-danger')+'">'+obj1.approved+'</span></td>	\
+			</tr>'+((obj1.approved=="true")?'<tr>	\
+				<td>Part No.:</td>	\
+				<td>'+obj1.partno+'</td>	\
+			</tr>':'')+'</tbody></table>';
+	return str;
+}
+function initialize_towns()
+{
+	$("select#id_town").html("<option value='----'>----</option>");
+}
+function update_towns(json)
+{
+	var towns = "";
+	if(json.towns.length == 0)
+		initialize_towns();
+	else
+	{
+		$.each(json.towns,function(index,town){
+			towns += "<option value='"+town+"'>"+town+"</option>";
+		})
+		$("select#id_town").html(towns);
+	}
+	var pincode = parseInt($('input#id_pin').val());
+	var town = $('select#id_town').val();
+	if(town != '----')
+	{
+		// alert('Yahan!');
+		get_voters(pincode,town,update_voters);
+	}
+	else
+	{
+		initialize_voters();
+	}
+}
+function update_voter(obj1){
+	// console.log(obj1);
+	// populate Voter
+	
+	// console.log(str);
+	$('div#voter_display').html(voter_string(obj1,$('input#id_voterid').val()));
+}
+function update_voters(json){
+	// console.log(obj1);
+	// populate Voter
+	var str = '<table class="table table-striped"> \
+		<tbody>	\
+			<tr>	\
+				<th>VoterID:</th>	\
+				<th>Name:</th>	\
+				<th>Date of birth:</th>	\
+			</tr>';
+	$.each(json,function(key,val){
+		str += '<tr>	\
+				<td>'+val.pk+'</td>	\
+				<td>'+val.fields.name+'</td>	\
+				<td>'+val.fields.dob+'</td>	\
+			</tr>'
+		// console.log(val);
+	});
+	str += '</tbody><table>'
+	// console.log(str);
+	$('div#voters_display').html(str);
+}
+
+
+
+$(document).ready(function() {
+	// $('#approve_voter_form').submit(function  () {
+		
+	// });
+	$('#voter_select_all').click(function(event) {  //on click 
+		if(this.checked) { // check select status
+			$('.voter_checkbox').each(function() { //loop through each checkbox
+				this.checked = true;  //select all checkboxes with class "checkbox1"               
+			});
+		}
+	});
+	$('#candidate_select_all').click(function(event) {  //on click 
+		if(this.checked) { // check select status
+			$('.candidate_checkbox').each(function() { //loop through each checkbox
+				this.checked = true;  //select all checkboxes with class "checkbox1"               
+			});
+		}
+	});
+	$('#party_select_all').click(function(event) {  //on click 
+		if(this.checked) { // check select status
+			$('.party_checkbox').each(function() { //loop through each checkbox
+				this.checked = true;  //select all checkboxes with class "checkbox1"               
+			});
+		}
+	});
+	$('input#id_voterid').on('input propertychange paste', function() {
+		var voterid = $('input#id_voterid').val();
+		// alert(voterid);
+		if(voterid.length == 10)
+		{
+			// alert('Yahan!');
+			get_voter(voterid,update_voter);
+		}
+		else
+		{
+			initialize_voter();
+		}
+	});
+	$('input#id_pin').on('input propertychange paste', function() {
+		//alert("Hi!!");
+		var pincode = parseInt($('input#id_pin').val());
+		if(pincode >= 100000 && pincode <= 999999)
+		{
+			get_towns(pincode,update_towns);
+		}
+		else
+		{
+			initialize_towns();
+			initialize_voters();
+		}
+	});
+	$('select#id_town').on('change', function() {
+		// alert("Yahan!! pe");
+		var pincode = parseInt($('input#id_pin').val());
+		var town = $('select#id_town').val();
+		// alert(town);
+		// alert(voterid);
+		if(town != '----')
+		{
+			// alert('Yahan!');
+			get_voters(pincode,town,update_voters);
+		}
+		else
+		{
+			initialize_voters();
+		}
+	});
+
+
+});
+</script>
+{%endblock%}

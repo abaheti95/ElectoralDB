@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Electoral Db</title>
+    </head>
+
+    <body>
+        <h1>Add a candidate</h1>
+
+        <form id="candidate_form" method="post" action="/electoraldb/add_candidate/" enctype="multipart/form-data">
+
+            {% csrf_token %}
+            <ul>
+                {{form.as_ul}}
+            </ul>
+            <input type="submit" name="submit" value="Add candidate" />
+        </form>
+    </body>
+
+</html>
