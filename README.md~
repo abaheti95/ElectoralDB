@@ -1,6 +1,5 @@
 # ElectoralDB
-India's election and electoral data is huge and requires good database management skills to maintain. In this project we have tried to apply the database management techniques to orgainze the electoral data in a better and user friendly way. We created a user friendly web tool to manage electoral data. It has different views for different users of the website with different permission. These users range from a Voter, a Candidate and a Party. Django is used for the backend server handling. We have provided various functionalities ranging from creating profile, apply for candidature, parties managing there candidates.
-A detailed description can be found in the documentations related to SRS. The website provides a easily understandable frontend to Voters, Candidates and Parties. The data used to create mappings and constraint checking is crawled from Govt. of India data given online.
+The aim of this project was to create a user friendly web tool to manage electoral data. It has different views for different users of the website with different permission. Django is used for the backend.
 
 ## Data Extraction
 Currently we have populated the data tables which are having the authentic data available online. There are Five such tables which are:
